@@ -1,0 +1,30 @@
+{
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Abubakr",
+      "phone": "+992900000001",
+      "password": "123456"
+    },
+    {
+      "id": 2,
+      "name": "Alex",
+      "phone": "+992900000002",
+      "password": "password123"
+    }
+  ],
+  "data": [
+    {
+      "id": 1,
+      "img": "https://example.com/image1.jpg",
+      "title": "First Post",
+      "info": "This is the first post description."
+    },
+    {
+      "id": 2,
+      "img": "https://example.com/image2.jpg",
+      "title": "Second Post",
+      "info": "This is the second post description."
+    }
+  ]
+}
