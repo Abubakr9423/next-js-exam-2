@@ -1,13 +1,13 @@
 {
   "accounts": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Abubakr",
       "phone": "+992900000001",
       "password": "123456"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Alex",
       "phone": "+992900000002",
       "password": "password123"
@@ -15,16 +15,241 @@
   ],
   "data": [
     {
-      "id": 1,
-      "img": "https://example.com/image1.jpg",
-      "title": "First Post",
-      "info": "This is the first post description."
+      "id": "3",
+      "title": "City Vibes2211",
+      "shortDesc": "A vibrant shot of city architecture and skylines.",
+      "publishDate": "2024-01-12",
+      "status": "true",
+      "description": "A vibrant shot of city architecture and skylines.",
+      "images": []
     },
     {
-      "id": 2,
-      "img": "https://example.com/image2.jpg",
-      "title": "Second Post",
-      "info": "This is the second post description."
+      "id": "4",
+      "title": "Delicious Cuisine",
+      "shortDesc": "Tasty food captures that make your mouth water.",
+      "description": "Tasty food captures that make your mouth water.",
+      "publishDate": "2024-01-15",
+      "status": "false",
+      "images": [
+        "https://picsum.photos/seed/food4/800/500"
+      ]
+    },
+    {
+      "id": "5"
+    },
+    {
+      "id": "07fe",
+      "title": "hello ",
+      "shortDesc": "world",
+      "publishDate": "21",
+      "status": "false",
+      "description": "Hello World",
+      "images": [
+        {}
+      ]
+    }
+  ],
+  "vocations": [
+    {
+      "id": "v1",
+      "experience": "Опыт от 2 лет",
+      "location": "Худжанд",
+      "title": "Менеджер по продажам",
+      "description": "Организация работы отдела продаж, ведение переговоров с ключевыми клиентами.",
+      "details": "Подробнее",
+      "status": "false"
+    },
+    {
+      "id": "v2",
+      "experience": "Без опыта",
+      "location": "Душанбе",
+      "status": "false",
+      "title": "Помощник бухгалтера",
+      "description": "Ведение первичной документации, помощь в подготовке отчетности.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v3",
+      "experience": "Опыт от 3 лет",
+      "location": "Куляб",
+      "status": "false",
+      "title": "Инженер-строитель",
+      "description": "Контроль качества строительных работ, составление смет и планов.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v4",
+      "experience": "Опыт от 1 года",
+      "location": "Душанбе",
+      "title": "Маркетолог",
+      "description": "Разработка рекламных кампаний, анализ рынка и конкурентов.",
+      "details": "Подробнее",
+      "status": "false"
+    },
+    {
+      "id": "v5",
+      "experience": "Опыт от 5 лет",
+      "location": "Хорог",
+      "status": "false",
+      "title": "Главный врач",
+      "description": "Руководство медицинским учреждением, организация работы персонала.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v6",
+      "experience": "Опыт от 2 лет",
+      "location": "Душанбе",
+      "status": "false",
+      "title": "UI/UX дизайнер",
+      "description": "Создание интерфейсов для веб и мобильных приложений, работа с Figma.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v7",
+      "experience": "Опыт от 4 лет",
+      "location": "Худжанд",
+      "title": "Программист",
+      "status": "false",
+      "description": "Разработка веб-приложений на JavaScript, работа с React и Node.js.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v8",
+      "experience": "Опыт от 1 года",
+      "location": "Душанбе",
+      "title": "HR-специалист",
+      "status": "false",
+      "description": "Подбор персонала, проведение собеседований, адаптация новых сотрудников.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v9",
+      "experience": "Опыт от 6 лет",
+      "location": "Куляб",
+      "status": "false",
+      "title": "Финансовый аналитик",
+      "description": "Анализ финансовых показателей компании, подготовка отчетов для руководства.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "v10",
+      "experience": "Без опыта",
+      "location": "Душанбе",
+      "status": "false",
+      "title": "Стажер в IT-отдел",
+      "description": "Помощь в поддержке серверов и рабочих станций, обучение основам программирования.",
+      "details": "Подробнее"
+    },
+    {
+      "id": "cc36",
+      "experience": "dwq",
+      "location": "qdw",
+      "title": "qwd",
+      "description": "qwd",
+      "status": "false",
+      "details": "qdwn dwqm"
+    }
+  ],
+  "applications": [
+    {
+      "id": "1",
+      "fio": "Аличон Забири",
+      "phone": "88888 0101",
+      "email": "example@gmail.com",
+      "company": "Капитал-Т",
+      "date": "01.12.2024",
+      "offer": "🎃",
+      "status": "true"
+    },
+    {
+      "id": "2",
+      "fio": "Ислом Каримов",
+      "phone": "77777 0202",
+      "email": "islom@gmail.com",
+      "company": "Сомон-Инвест",
+      "date": "02.12.2024",
+      "offer": "📄",
+      "status": "false"
+    },
+    {
+      "id": "3",
+      "fio": "Мухаммад Али",
+      "phone": "66666 0303",
+      "email": "ali@gmail.com",
+      "company": "Таджик-Телеком",
+      "date": "03.12.2024",
+      "offer": "💡",
+      "status": "true"
+    },
+    {
+      "id": "4",
+      "fio": "Зебо Хамидова",
+      "phone": "55555 0404",
+      "email": "zebo@gmail.com",
+      "company": "Ориён-Банк",
+      "date": "04.12.2024",
+      "offer": "📊",
+      "status": "false"
+    },
+    {
+      "id": "5",
+      "fio": "Фирдавс Саидов",
+      "phone": "44444 0505",
+      "email": "firdavs@gmail.com",
+      "company": "Агро-Таджик",
+      "date": "05.12.2024",
+      "offer": "📦",
+      "status": "true"
+    },
+    {
+      "id": "6",
+      "fio": "Малика Юсупова",
+      "phone": "33333 0606",
+      "email": "malika@gmail.com",
+      "company": "Таджик-Энерго",
+      "date": "06.12.2024",
+      "offer": "📁",
+      "status": "false"
+    },
+    {
+      "id": "7",
+      "fio": "Шахром Давлатов",
+      "phone": "22222 0707",
+      "email": "shahrom@gmail.com",
+      "company": "Сомон-Тур",
+      "date": "07.12.2024",
+      "offer": "📌",
+      "status": "true"
+    },
+    {
+      "id": "8",
+      "fio": "Гулрухсор Махмудова",
+      "phone": "11111 0808",
+      "email": "gulrukhsor@gmail.com",
+      "company": "Таджик-Медиа",
+      "date": "08.12.2024",
+      "offer": "📎",
+      "status": "false"
+    },
+    {
+      "id": "9",
+      "fio": "Дилшод Каримов",
+      "phone": "99999 0909",
+      "email": "dilshod@gmail.com",
+      "company": "Таджик-Строй",
+      "date": "09.12.2024",
+      "offer": "📑",
+      "status": "true"
+    },
+    {
+      "id": "10",
+      "fio": "Саида Хусейнзода",
+      "phone": "12345 1010",
+      "email": "saida@gmail.com",
+      "company": "Таджик-Финанс",
+      "date": "10.12.2024",
+      "offer": "📂",
+      "status": "false"
     }
   ]
 }

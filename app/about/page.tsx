@@ -1,24 +1,82 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { UserCircle2 } from 'lucide-react'
-const page = () => {
-    return (
-        <div>
-            <nav className='flex items-center justify-evenly'>
-                <div className='flex items-center gap-2'>
-                    <Image src='/image 6 (1).png' alt='logo' width={33.21428680419922} height={30} />
-                    <h1>КАПИТАЛ-Т</h1>
-                </div>
-                <div className='flex items-center gap-2'>
-                    <Link className='hover:text-[#FFA900]' href='/about'>Новости</Link>
-                    <Link className='hover:text-[#FFA900]' href='/vocation'>Вакансии</Link>
-                    <Link className='hover:text-[#FFA900]' href='/reports'>Заявки</Link>
-                </div>
-                <UserCircle2/>
-            </nav>
-        </div>
-    )
-}
+"use client";
 
-export default page
+import { Eye, EyeOff, Pencil, Trash } from "lucide-react";
+import Navbar from "@/components/navbar";
+import { useCheckboxtodoMutation, useDeleteTodoMutation, useGetTodosQuery } from "@/lib/features/api";
+import Link from "next/link";
+
+const Page = () => {
+    const { data: todos = [], isLoading } = useGetTodosQuery();
+    const [deleteTodo] = useDeleteTodoMutation();
+    const [checkboxtodo] = useCheckboxtodoMutation()
+
+    return (
+        <>
+            <Navbar />
+            <div className="p-10">
+                <div className="flex justify-between p-5">
+                    <h1 className="font-[700] text-[36px]">Новости</h1>
+                    <Link href="/dialog">
+                        <button className="w-[138px] h-[52px] rounded-[100px] bg-[#FFA900]">
+                            + Добавить
+                        </button>
+                    </Link>
+                </div>
+
+                <div className="flex gap-[25px] flex-wrap">
+                    {todos.map((e: any) => (
+                        <article
+                            key={e.id}
+                            className="w-[394.666px] gap-2 h-[422px] rounded-[28px] border-[1px] border-[#E5E7EB] flex flex-col items-start justify-center p-2"
+                        >
+                            <img
+                                src={Array.isArray(e.images) && e.images.length > 0 ? e.images[0] : "/placeholder.png"}
+                                className="w-[378.666px] h-[250px] rounded-[20px] object-cover"
+                                alt={e.title}
+                            />
+
+                            <h1 className="font-[700] text-[20px]">
+                                {e.title}
+                            </h1>
+
+                            <p className="font-[400] text-[15px] w-[354.666px]">
+                                {e.shortDesc}
+                            </p>
+
+                            <div className="flex items-center justify-between gap-[46px]">
+                                <p className="text-[#FFA900]">Подробнее</p>
+
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => deleteTodo(e.id)}
+                                    >
+                                        <Trash className="text-red-600" />
+                                    </button>
+
+                                    <Link href={`/dialog?id=${e.id}`}>
+                                        <Pencil className="text-[#FFA900] cursor-pointer" />
+                                    </Link>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => checkboxtodo(e)}
+                                    >
+                                        {e.status === "true" ? (
+                                            <Eye className="text-[#FFA900]" />
+                                        ) : (
+                                            <EyeOff />
+                                        )}
+                                    </button>
+
+                                </div>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default Page;
