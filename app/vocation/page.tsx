@@ -4,13 +4,36 @@ import Navbar from '@/components/navbar';
 import { useCheckboxvocationsMutation, useDeleteVocationsMutation, useGetVocationsQuery } from '@/lib/features/api';
 import { Eye, EyeOff, Locate, Pencil, Trash } from 'lucide-react';
 import Link from 'next/link';
+import toast from "react-hot-toast";
 
 const Page = () => {
     const { data, isLoading } = useGetVocationsQuery();
     const [deleteVocations] = useDeleteVocationsMutation();
-    const [checkboxvocations] = useCheckboxvocationsMutation()
+    const [checkboxvocations] = useCheckboxvocationsMutation();
 
     if (isLoading) return <p>Loading...</p>;
+
+    const handleDelete = async (id: any) => {
+        try {
+            await deleteVocations(id);
+            toast.success("Вакансия удалена!");
+        } catch {
+            toast.error("Ошибка при удалении");
+        }
+    };
+
+    const handleToggle = async (vocation: any) => {
+        try {
+            await checkboxvocations(vocation);
+            toast.success(
+                vocation.status === "true"
+                    ? "Вакансия скрыта"
+                    : "Вакансия показана"
+            );
+        } catch {
+            toast.error("Ошибка при изменении статуса");
+        }
+    };
 
     return (
         <div>
@@ -25,7 +48,7 @@ const Page = () => {
                     </Link>
                 </div>
 
-                <div className="flex flex-wrap gap-20">
+                <div className="flex flex-wrap gap-10">
                     {data?.map((e) => (
                         <article
                             key={e.id}
@@ -47,7 +70,7 @@ const Page = () => {
                                 <p className="text-[#FFA900]">{e.details ?? "Подробнее"}</p>
 
                                 <div className="flex items-center gap-2">
-                                    <button type="button" onClick={() => deleteVocations(e.id)}>
+                                    <button type="button" onClick={() => handleDelete(e.id)}>
                                         <Trash className="text-red-600" />
                                     </button>
 
@@ -55,10 +78,7 @@ const Page = () => {
                                         <Pencil className="text-[#FFA900] cursor-pointer" />
                                     </Link>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => checkboxvocations(e)}
-                                    >
+                                    <button type="button" onClick={() => handleToggle(e)}>
                                         {e.status === "true" ? (
                                             <Eye className="text-[#FFA900]" />
                                         ) : (

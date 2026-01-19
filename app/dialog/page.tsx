@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
     Select,
     SelectContent,
@@ -17,12 +17,22 @@ import {
     useEditTodoMutation,
     useGetTodosQuery,
 } from "@/lib/features/api";
-import { useSearchParams, useRouter } from "next/navigation"; 
+import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
+type FormValues = {
+    title: string;
+    shortDesc: string;
+    publishDate: string;
+    status: string;
+    description: string;
+    images: string[];
+};
 
 const Page = () => {
     const searchParams = useSearchParams();
-    const router = useRouter(); 
-    const id = searchParams.get("id"); 
+    const router = useRouter();
+    const id = searchParams.get("id");
 
     const { data: todos = [], isLoading } = useGetTodosQuery();
     const [addTodo] = useAddTodoMutation();
@@ -31,72 +41,93 @@ const Page = () => {
     const [previews, setPreviews] = useState<string[]>([]);
     const [error, setError] = useState("");
 
-    const initialData = useMemo(
-        () => todos.find((todo: any) => String(todo.id) === String(id)),
-        [todos, id]
-    );
+    const initialData = todos.find((todo: any) => String(todo.id) === String(id));
     const isEdit = Boolean(initialData);
 
-    useEffect(() => {
-        if (initialData?.images) {
-            setPreviews(initialData.images);
-        }
-    }, [initialData]);
-
-    const formik = useFormik({
-        initialValues: {
+    const { register, handleSubmit, setValue, reset, watch } = useForm<FormValues>({
+        defaultValues: {
             title: initialData?.title || "",
             shortDesc: initialData?.shortDesc || "",
             publishDate: initialData?.publishDate || "",
             status: initialData?.status ?? "true",
             description: initialData?.description || "",
-            images: [] as File[],
-        },
-        enableReinitialize: true,
-        onSubmit: async (values) => {
-            if (isEdit) {
-                await editTodo({...values,id:id});
-            } else {
-                await addTodo(values);
-            }
-            router.push("/about")
+            images: initialData?.images || [],
         },
     });
+
+    useEffect(() => {
+        if (initialData) {
+            reset({
+                title: initialData.title,
+                shortDesc: initialData.shortDesc,
+                publishDate: initialData.publishDate,
+                status: initialData.status,
+                description: initialData.description,
+                images: initialData.images || [],
+            });
+            if (initialData.images) {
+                setPreviews(initialData.images);
+            }
+        }
+    }, [initialData, reset]);
+
+    const onSubmit = async (values: FormValues) => {
+        const payload = {
+            ...values,
+            id: isEdit ? id : undefined,
+        };
+
+        try {
+            if (isEdit) {
+                await editTodo(payload);
+                toast.success("Новость обновлена!");
+            } else {
+                await addTodo(payload);
+                toast.success("Новость добавлена!");
+            }
+            router.push("/about");
+        } catch {
+            toast.error("Ошибка при сохранении");
+        }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
         setError("");
 
-        const validFiles: File[] = [];
+        const readers = files.map(
+            (file) =>
+                new Promise<string>((resolve, reject) => {
+                    if (file.size > 5 * 1024 * 1024) {
+                        setError("Каждый файл должен быть не более 5 МБ");
+                        reject("File too large");
+                    }
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                })
+        );
 
-        files.forEach((file) => {
-            if (file.size > 5 * 1024 * 1024) {
-                setError("Каждый файл должен быть не более 5 МБ");
-                return;
-            }
-
-            validFiles.push(file);
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreviews((prev) => [...prev, reader.result as string]);
-            };
-            reader.readAsDataURL(file);
-        });
-
-        formik.setFieldValue("images", validFiles);
+        Promise.all(readers)
+            .then((base64Files) => {
+                setPreviews((prev) => [...prev, ...base64Files]);
+                setValue("images", [...watch("images"), ...base64Files]);
+            })
+            .catch(() => { });
     };
 
     const removeImage = (index: number) => {
         setPreviews((prev) => prev.filter((_, i) => i !== index));
-        formik.setFieldValue(
+        setValue(
             "images",
-            formik.values.images.filter((_, i) => i !== index)
+            watch("images").filter((_, i) => i !== index)
         );
     };
 
     if (isLoading) return <p>Loading...</p>;
-    if (id && !initialData && isEdit) return <p>Загрузка данных для редактирования...</p>;
+    if (id && !initialData && isEdit)
+        return <p>Загрузка данных для редактирования...</p>;
 
     return (
         <div className="flex flex-col items-center gap-5 justify-center p-10">
@@ -104,29 +135,23 @@ const Page = () => {
                 {isEdit ? "Редактировать новость" : "Добавить новость"}
             </h1>
 
-            <form onSubmit={formik.handleSubmit} className="flex flex-col gap-10">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10">
                 <input
-                    name="title"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
+                    {...register("title")}
                     type="text"
                     placeholder="Название"
                     className="w-[600px] p-2 h-[56px] rounded-[20px] border-[3px] border-[#E5E7EB]"
                 />
 
                 <input
-                    name="shortDesc"
-                    value={formik.values.shortDesc}
-                    onChange={formik.handleChange}
+                    {...register("shortDesc")}
                     type="text"
                     placeholder="Краткое описание"
                     className="w-[600px] p-2 h-[104px] rounded-[20px] border-[3px] border-[#E5E7EB]"
                 />
 
                 <input
-                    name="publishDate"
-                    value={formik.values.publishDate}
-                    onChange={formik.handleChange}
+                    {...register("publishDate")}
                     type="text"
                     placeholder="Дата публикации"
                     className="w-[600px] p-2 h-[56px] rounded-[20px] border-[3px] border-[#E5E7EB]"
@@ -135,8 +160,8 @@ const Page = () => {
                 <div className="flex justify-between items-center">
                     <h2 className="font-[600] text-[20px]">Статус</h2>
                     <Select
-                        value={formik.values.status}
-                        onValueChange={(value) => formik.setFieldValue("status", value)}
+                        value={watch("status")}
+                        onValueChange={(value) => setValue("status", value)}
                     >
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Выбрать" />
@@ -152,9 +177,7 @@ const Page = () => {
                 </div>
 
                 <input
-                    name="description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
+                    {...register("description")}
                     type="text"
                     placeholder="Описание"
                     className="w-[600px] h-[278px] p-2 rounded-[20px] border-[3px] border-[#E5E7EB]"
@@ -164,7 +187,9 @@ const Page = () => {
                     <label className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-yellow-400 rounded-xl cursor-pointer bg-yellow-50 hover:bg-yellow-100 transition">
                         <UploadCloud className="w-12 h-12 text-yellow-500 mb-3" />
                         <p className="text-gray-700 font-medium">Загрузить фото</p>
-                        <p className="text-gray-400 text-sm">Можно выбрать несколько • до 5 МБ</p>
+                        <p className="text-gray-400 text-sm">
+                            Можно выбрать несколько • до 5 МБ
+                        </p>
 
                         <input
                             type="file"
